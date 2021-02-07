@@ -93,15 +93,19 @@ class Indexer():
             for name in self.walk(parent=row[1]):
                 yield os.path.join(dir_name, name)
 
-    def clean_dir(self):
+    def clean_dir(self, dir_path, files_id):
+
+        parts = self.find_path(dir_path)
         pass
     def update(self, path: pathlib.Path):
         for root, dirs, files in os.walk(path):
+            files_id = list()
             for file in files:
                 file = pathlib.Path(root, file)
                 file = file.relative_to(self.root)
                 id = self.add_path(file)
-            self.clean_dir()
+                files_id.append(id)
+            self.clean_dir(pathlib.Path(root).relative_to(self.root), files_id)
 
 
 def validate_fs(files, indexer):
